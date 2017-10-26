@@ -1,5 +1,5 @@
 <body>
 	
 
-<p>nick: <?php echo $user['username'] ?></p>
-<p>email: <?php echo $user['email'] ?></p>
+<p>nick: <?php echo escape($user['username']); ?></p>
+<p>email: <?php echo escape($user['email']); ?></p>

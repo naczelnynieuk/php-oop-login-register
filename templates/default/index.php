@@ -13,7 +13,7 @@
 	<h2>Kominkaty:</h2>
 	<ul>
 	<?php foreach ($flash as $value){ ?>
-		<li><?= $value ?></li>
+		<li><?= escape($value); ?></li>
 	<?php } ?>
 	</ul>
 <?php } ?>
@@ -22,7 +22,7 @@
 
 <?php else: ?>
 
-<h2>Witaj <?php echo $user['username']; ?></h2>
+<h2>Witaj <?php echo escape($user['username']); ?></h2>
 
 <?php echo Helper::linkTo('page.php', 'Profil') ?><br>
 <?php echo Helper::linkTo('update.php', 'Aktualizuj dane') ?><br>
@@ -36,7 +36,7 @@
 	<h2>Kominkaty:</h2>
 	<ul>
 	<?php foreach ($flash as $value){ ?>
-		<li><?= $value ?></li>
+		<li><?= escape($value); ?></li>
 	<?php } ?>
 	</ul>
 <?php } ?>

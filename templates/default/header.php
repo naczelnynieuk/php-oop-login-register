@@ -1,10 +1,10 @@
 <?php use MyApp\Tpl\Helper as Helper;?>
 
 <!DOCTYPE html>
-<html lang="<?= $lang?>">
+<html lang="<?= escape($lang);?>">
 <head>
-	<title><?= $title; ?></title>
-	<meta charset= "<?= $charset ?>">
+	<title><?= escape($title); ?></title>
+	<meta charset= "<?= escape($charset); ?>">
 </head>
 <body>
 <a href="index.php" style="color:black; text-decoration: none; display: block; padding-bottom: 20px;"><h1>System logowania i rejestracji by NaczelnyNieuk</h1></a>

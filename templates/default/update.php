@@ -1,4 +1,4 @@
-<?php use MyApp\Tpl\Helper as Helper;?>
+v<?php use MyApp\Tpl\Helper as Helper;?>
 
 <h2>Podstawowe dane</h2>
 <form action="update.php" method="post">

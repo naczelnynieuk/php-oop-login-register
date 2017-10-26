@@ -14,12 +14,12 @@
 <h2>Użytkownicy</h2>
 <?php foreach ($users as $key => $value) { ?>
 
-	<h2><?php echo $value['username']; ?></h2>
+	<h2><?php echo escape($value['username']); ?></h2>
 	<ul>
 
-	<li>username: <?php echo $value['username']; ?></li>
-	<li>email: <?php echo $value['email']; ?></li>
-	<li><?php echo Helper::linkTo('?usun='. $value['id'], 'usun') ?></li>
+	<li>username: <?php echo escape($value['username']); ?></li>
+	<li>email: <?php echo escape($value['email']); ?></li>
+	<li><?php echo Helper::linkTo('?usun='. escape($value['id']), 'usun') ?></li>
 
 	</ul>
 <?php

@@ -1,10 +1,10 @@
 <body>
 <h2>Zarejestruj się!</h2>
 <form action="register.php" method="post">
-	<label for="">username <input type="text" name="username" value="<?php show($form['username']); ?>"></label><br>
+	<label for="">username <input type="text" name="username" value="<?php escape($form['username']); ?>"></label><br>
 	<label for="">password <input type="text" name="password"></label><br>
 	<label for="">password reply<input type="text" name="password_reply"></label><br>
-	<label for="">email <input type="text" name="email" value="<?php  show($form['email']); ?>"></label><br>
+	<label for="">email <input type="text" name="email" value="<?php  escape($form['email']); ?>"></label><br>
 	<input type="hidden" name="token" value="<?php echo \MyApp\Token::generate();?>">
 	<input type="submit" value="zarejestruj" name="register">
 </form>
