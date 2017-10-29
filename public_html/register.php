@@ -6,6 +6,7 @@ try {
 
 
 if (\MyApp\User::isLogin()) {
+	\MyApp\FlashMessage::add('Jesteś już zarejestrowany!');
 	\MyApp\Redirect::to('index.php');
 	die();
 }
@@ -19,10 +20,7 @@ $view->lang = \MyApp\Config::get('system/default_lang');
 $view->charset = \MyApp\Config::get('system/charset');
 
 
-$form = array(
-				'username'=>'',
-				'email'=>'',
-		);
+$form = array('username'=>'','email'=>'');
 
 
 
@@ -84,7 +82,6 @@ if (isset($_POST['register'])) {
 
 
 $view->form = $form;
-
 
 $view->render();
 }catch (Exception $e) {

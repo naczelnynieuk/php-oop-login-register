@@ -51,8 +51,9 @@ if (isset($_GET['usun'])) {
 
 $userdata=array();
 
-if($userdata = $user->getData()){
-  $view->user = $userdata;
+if($user->isExists()){
+  $userdata = $user->getData();
+  $view->user = $user->getData();
 }
 
 $users= \MyApp\Db::getInstance()->select('users');

@@ -1,10 +1,8 @@
 <?php
 require('../core/init.php');
 
-
 try {
 
-$db = \MyApp\Db::getInstance();
 $tpl = new \MyApp\Tpl\Engine('../templates/'. \MyApp\Config::get('system/default_template'));
 $view = $tpl->createView(['header', 'page', 'footer']);
 
@@ -21,20 +19,25 @@ $userdata=array();
 
 if (isset($_GET['user'])) {
 	$user = new \MyApp\User($_GET['user']);
-	if ($userdata = $user->getData()) {
+	if ($user->isExists()) {
+		echo 'dzialam';
+		$userdata = $user->getData();
 		$view->user = $userdata;
 		$view->title = $userdata['username'];
 	}else {
+		\MyApp\FlashMessage::add('Podany uzytkownik nie istnieje!');
 		\MyApp\Redirect::to('index.php');
 		die();
 	}
-} elseif (\MyApp\Session::exists(\MyApp\Config::get('session/session_name'))) {
+} elseif (\MyApp\User::isLogin()) {
 	$user = new \MyApp\User();
-	if ($userdata = $user->getData()) {
+	if ($user->isExists()) {
+		$userdata = $user->getData();
 		$view->user = $userdata;
 		$view->title = $userdata['username'];
 	}
 } else {
+	\MyApp\FlashMessage::add('Wystąpił błąd podczas wyswietlania profilu!');
 	\MyApp\Redirect::to('index.php');
 	die();
 }

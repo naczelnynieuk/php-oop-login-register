@@ -4,7 +4,6 @@ require('../core/init.php');
 
 try {
 
-$db = \MyApp\Db::getInstance();
 $tpl = new \MyApp\Tpl\Engine('../templates/'. \MyApp\Config::get('system/default_template'));
 $view = $tpl->createView(['header', 'update', 'footer']);
 
@@ -23,9 +22,11 @@ if ($flash = \MyApp\FlashMessage::render()) {
 $userdata=array();
 
 $user = new \MyApp\User();
-if($userdata = $user->getData()){
+if($user->isExists()){
+	$userdata = $user->getData();
 	$view->user = $userdata;
 }else{
+	\MyApp\FlashMessage::add('Zaloguj się aby edytować konto!');
 	\MyApp\Redirect::to('index.php');
 	die();
 }

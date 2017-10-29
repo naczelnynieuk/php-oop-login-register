@@ -3,20 +3,18 @@ namespace MyApp;
 
 class User{
 
-	private $_instance,
-			$_userData,
-			$_result,
-			$_sessionName;
-
+	private $_instance;
+	private	$_userData;
+	private	$_exists;
+	private	$_result;
 
 	public function __construct($user = null){
 
 		$this->_instance = DB::getInstance();
-		$this->_sessionName = Config::get('session/session_name');
-		$this->_result = null;
+		$this->_exists = null;
 
-		if (!$user && isset($_SESSION[$this->_sessionName])) {
-			$user = $_SESSION[$this->_sessionName];
+		if (!$user && isset($_SESSION[Config::get('session/session_name')])) {
+			$user = $_SESSION[Config::get('session/session_name')];
 		}
 		trim($user);
 		$this->getUser($user);
@@ -24,44 +22,65 @@ class User{
 	}
 
 	private function getUser($user=null){
-		if (is_string($user)) {
-			$this->_userData = $this->_instance->select('users',['username','=', $user], [
-					'limit'=>1
-				])[0];
-			$this->setPermission();
-			$this->_result = true;
 
-		}
 		if (is_int($user)) {
 			$this->_userData = $this->_instance->select('users',['id','=', $user], [
 					'limit'=>1
 				])[0];
-			$this->setPermission();
-			$this->_result = true;
+
+			if (!$this->_userData) {
+				$this->_exists = false;
+			}else {
+				$this->setPermission();
+				$this->_exists = true;
+			}
+			return;
+		}elseif (is_string($user)) {
+
+			$this->_userData = $this->_instance->select('users',['username','=', $user], [
+					'limit'=>1
+				])[0];
+
+			if (!$this->_userData) {
+				$this->_exists = false;
+			}else {
+				$this->setPermission();
+				$this->_exists = true;
+			}
+			return;
+
 		}
+		$this->_exists = false;
 	}
 
 	public function getData(){
 		return $this->_userData;
 	}
+	public function isExists(){
+		return $this->_exists;
+	}
+
 	public function getResult(){
 		return $this->_result;
 	}
 
 	public function update($what, $where, $params){
 		$this->_result = null;
+
 		$this->_result = $this->_instance->update($what, $where, $params);
 		return $this->_result;
 	}
 
 	public function register($data){
 		$this->_result = null;
+
 		$this->_result = $this->_instance->insert('users', [
 			'username' => $data['username'],
 			'password' => \password_hash($data['password'],PASSWORD_DEFAULT),
 			'email'	   => $data['email']
 			]);
-		return $this->getResult();
+
+		return $this->_result;
 
 	}
 
@@ -69,6 +88,7 @@ class User{
 	public static function login($data, $remember = false) {
 
 		$user = new User($data);
+		$result = array();
 
 		if ($result = $user->getData()) {
 			Session::put(Config::get('session/session_name'), (int)$result['id']);
@@ -96,7 +116,7 @@ class User{
 		$this->_result = null;
 
 		$this->_instance->delete('sessions', array('user_id', '=', $this->_userData['id']));
-		Session::delete($this->_sessionName);
+		Session::delete(Config::get('session/session_name'));
 		\MyApp\Cookie::delete(\MyApp\Config::get('remember/cookie_name'));
 		
 	}
@@ -117,8 +137,10 @@ class User{
 			$this->_userData['permission'] =  0;
 		}
 	}
+
+
 	public function  isAdmin(){
-		if ($this->getData()['permission'] ==1 ) {
+		if ($this->getData()['permission'] == 1 ) {
 			return true;
 		}
 

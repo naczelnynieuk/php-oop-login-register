@@ -23,8 +23,8 @@ if ($flash = \MyApp\FlashMessage::render()) {
 $userdata=array();
 $user = new \MyApp\User();
 
-if($userdata = $user->getData()){
-  $view->user = $userdata;
+if($user->isExists()){
+  $view->user = $user->getData();
 }
 
 $view->render();
