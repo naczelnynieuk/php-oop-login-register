@@ -67,35 +67,3 @@ $view->render();
 }catch (Exception $e) {
 	die('Wystąpł błąd: '.$e->getMessage());
 }
-
-
-
-
-/*
-
-
-pA( \MyApp\Db::getInstance()->select('users', null, [
-  	'orderby'=>'id',
-  	'sort' => 'ASC',
-  	'limit'=>5
-  	]));
-
- */
-
-
-/*
-echo \MyApp\Db::getInstance()->insert('users', [
- 	'username'=> 'marek5',
- 	'password'=> 'marek4haslo',
- 	'email'=> 'marek4@gmail.com'
- 	]);
-*/
-/*
-echo \MyApp\Db::getInstance()->update('users', ['id','=', 1], [
-  	'username'=> 'jasiu3',
-  	'password'=> 'kasztann',
-  	'email'=> 'jasiu@gmail.com'
-  	]);
- */
-
-// echo \MyApp\Db::getInstance()->delete('users', ['password','=','haslo']);

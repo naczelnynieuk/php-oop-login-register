@@ -1,17 +1,46 @@
 <?php
 namespace MyApp;
-
+/**
+ * Klasa odpowiadajaca za operacje na uzytkowniku
+ */
 class User{
 
+/**
+ * Instancja klasy Db
+ * @var Db
+ */
 	private $_instance;
+
+/**
+ * Dane uzytkownika
+ * @var array
+ */
 	private	$_userData;
+
+/**
+ * Przechowuje informacje o istnieniu uzytkownika
+ * @var boolean
+ */
 	private	$_exists;
+
+/**
+ * Przechowuje informacje o rezultacie zapytania
+ */
 	private	$_result;
 
+/**
+ * Pobiera obiekt klasy Db, oraz tworzy instancje uzytkownika
+ * 
+ * Przyklad
+ * 
+ * $user = new User(); ->Pobierze dane usera jesli jest zalogowany;
+ * 
+ * $user = new User(3); $user = new User('janusz'); -> Pobierze uzytkownika o id=3 / username = janusz
+ */
 	public function __construct($user = null){
 
 		$this->_instance = DB::getInstance();
-		$this->_exists = null;
+		$this->_exists = false;
 
 		if (!$user && isset($_SESSION[Config::get('session/session_name')])) {
 			$user = $_SESSION[Config::get('session/session_name')];
@@ -21,6 +50,10 @@ class User{
 
 	}
 
+/**
+ * Sprawdza czy uzytkownik istnieje w zaleznosci od id lub username i pobiera jego dane.
+ * 
+ */
 	private function getUser($user=null){
 
 		if (is_int($user)) {
@@ -53,9 +86,17 @@ class User{
 		$this->_exists = false;
 	}
 
+/**
+ * Zwraca dane uzytkownika
+ * 
+ * @return array
+ */
 	public function getData(){
 		return $this->_userData;
 	}
+/**
+ * @return boolean Zwraca informacje czy uzytkownik istnieje.
+ */
 	public function isExists(){
 		return $this->_exists;
 	}
@@ -64,6 +105,9 @@ class User{
 		return $this->_result;
 	}
 
+/**
+ * Wywoluje funkcje update z db i zwraca rezultat
+ */
 	public function update($what, $where, $params){
 		$this->_result = null;
 
@@ -71,6 +115,11 @@ class User{
 		return $this->_result;
 	}
 
+/**
+ * Rejestruje uzytkownia i zwraca rezultat
+ * @param  array $data Dane uzytkownika, ktore powinny byc wczesniej przepuszczone przez klase validate
+ * @return integer	Zwraca ilosc rekordow, ktore zareagowaly na zapytanie
+ */
 	public function register($data){
 		$this->_result = null;
 
@@ -84,10 +133,15 @@ class User{
 
 	}
 
+/**
+ * Loguje uzytkownika, tworzy sesje i ciasteczka(remember)
+ * @param  integer/string  $user	Id/nazwa uzytkownika
+ * @param  boolean $remember 		Czy zapamietac uzytkownika
+ * @return boolean
+ */
+	public static function login($user, $remember = false) {
 
-	public static function login($data, $remember = false) {
-
-		$user = new User($data);
+		$user = new User($user);
 		$result = array();
 
 		if ($result = $user->getData()) {
@@ -112,6 +166,9 @@ class User{
 		 return true;
 	}
 
+/**
+ * Wylogowuje uzyktownika
+ */
 	public function logout(){
 		$this->_result = null;
 
@@ -121,6 +178,10 @@ class User{
 		
 	}
 
+/**
+ * Sprawdza czy uzytkownik jest zalogowany
+ * @return boolean
+ */
 	public static function isLogin(){
 		return (Session::exists(Config::get('session/session_name'))) ? true : false;
 	}
@@ -138,7 +199,10 @@ class User{
 		}
 	}
 
-
+/**
+ * Sprawdza czy uzytkownik jest adminem
+ * @return boolean
+ */
 	public function  isAdmin(){
 		if ($this->getData()['permission'] == 1 ) {
 			return true;

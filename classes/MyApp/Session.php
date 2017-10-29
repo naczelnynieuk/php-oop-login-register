@@ -1,9 +1,12 @@
 <?php 
 namespace MyApp;
 
-
+/**
+ * Tworzy, nadzoruje, usuwa sesje
+ */
 class Session {
 	
+    
     public static function exists($name) {
         return (isset($_SESSION[$name])) ? true : false;
     }
